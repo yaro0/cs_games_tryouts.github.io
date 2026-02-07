@@ -6,17 +6,18 @@
   <title>3D Model Viewer – UX/UI Challenge</title>
   <style>
     :root {
-      --bg-main: #0f0b1a;
-      --bg-panel: #18122b;
-      --bg-panel-alt: #221a3d;
+      --bg-main: #0e0d12;
+      --bg-panel: #16151c;
+      --bg-panel-alt: #1d1c24;
+      --bg-viewport: #212020;
       --accent: #6d4cff;
       --accent-soft: #8b6dff;
-      --text-main: #e6e3f3;
-      --text-muted: #a5a0c2;
+      --text-main: #e7e6ee;
+      --text-muted: #a3a1b2;
       --good: #3ddc97;
       --warn: #facc15;
       --bad: #ef4444;
-      --border: #2f2754;
+      --border: #2a2933;
     }
 
     * {
@@ -30,8 +31,8 @@
       color: var(--text-main);
       height: 100vh;
       display: grid;
-      grid-template-columns: 300px 1fr 320px;
-      grid-template-rows: 64px 1fr;
+      grid-template-columns: 280px 1fr 300px;
+      grid-template-rows: 48px 1fr;
       grid-template-areas:
         "header header header"
         "left viewport right";
@@ -40,35 +41,40 @@
     /* Header */
     header {
       grid-area: header;
-      background: linear-gradient(90deg, #1b1340, #120c2b);
+      background: linear-gradient(90deg, #1a1830, #12101c);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
+      padding: 0 14px;
     }
 
     header h1 {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.3px;
     }
 
     header button {
       background: var(--accent);
       border: none;
       color: white;
-      padding: 8px 14px;
-      border-radius: 6px;
+      padding: 6px 10px;
+      border-radius: 5px;
+      font-size: 12px;
       cursor: pointer;
     }
 
     /* Panels */
     aside {
       background: var(--bg-panel);
-      border-right: 1px solid var(--border);
-      padding: 16px;
+      padding: 12px;
       overflow-y: auto;
+    }
+
+    aside.left {
+      grid-area: left;
+      border-right: 1px solid var(--border);
     }
 
     aside.right {
@@ -76,35 +82,31 @@
       border-left: 1px solid var(--border);
     }
 
-    aside.left {
-      grid-area: left;
-    }
-
     section {
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     section h2 {
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       color: var(--accent-soft);
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
     }
 
     .card {
       background: var(--bg-panel-alt);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 12px;
+      padding: 10px;
     }
 
     .row {
       display: flex;
       justify-content: space-between;
-      font-size: 13px;
-      margin-bottom: 6px;
+      font-size: 12px;
+      margin-bottom: 5px;
       color: var(--text-muted);
     }
 
@@ -112,18 +114,18 @@
     .upload {
       border: 2px dashed var(--border);
       border-radius: 8px;
-      padding: 16px;
+      padding: 14px;
       text-align: center;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
     }
 
     .progress {
-      height: 6px;
-      background: #2a2252;
+      height: 5px;
+      background: #2a2933;
       border-radius: 4px;
       overflow: hidden;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .progress span {
@@ -133,35 +135,30 @@
       background: var(--accent);
     }
 
-    /* Performance */
-    .score {
-      font-size: 32px;
-      font-weight: 700;
-      text-align: center;
-      color: var(--good);
-    }
-
-    .badge {
-      text-align: center;
-      font-size: 12px;
-      margin-bottom: 8px;
-    }
-
     /* Render Modes */
     .modes {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
     }
 
     .mode {
-      padding: 8px;
-      font-size: 12px;
+      padding: 6px 4px;
+      font-size: 10px;
       background: var(--bg-panel);
       border: 1px solid var(--border);
       border-radius: 6px;
       text-align: center;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+    }
+
+    .mode span {
+      font-size: 14px;
     }
 
     .mode.active {
@@ -172,14 +169,30 @@
 
     /* Sliders */
     input[type="range"] {
+      -webkit-appearance: none;
       width: 100%;
+      height: 4px;
+      background: #2a2933;
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-top: -4px;
+      box-shadow: 0 0 0 3px rgba(109, 76, 255, 0.25);
     }
 
     /* Viewport */
     main {
       grid-area: viewport;
       position: relative;
-      background: radial-gradient(circle at center, #1c1442, #0f0b1a);
+      background: var(--bg-viewport);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -187,7 +200,7 @@
 
     .viewport-placeholder {
       color: var(--text-muted);
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
     }
 
@@ -196,25 +209,77 @@
       bottom: 12px;
       left: 12px;
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
 
     .toggle {
       background: var(--bg-panel);
       border: 1px solid var(--border);
-      padding: 6px 10px;
+      padding: 4px 8px;
       border-radius: 6px;
-      font-size: 12px;
+      font-size: 11px;
+    }
+
+    /* Performance */
+    .score {
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .badge {
+      text-align: center;
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
+    .perf-controls {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .perf-controls button {
+      flex: 1;
+      font-size: 10px;
+      padding: 4px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Lighting – Blender inspired */
+    .light-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .light-row label {
+      font-size: 11px;
+      width: 60px;
+      color: var(--text-muted);
+    }
+
+    .light-row input[type="color"] {
+      width: 22px;
+      height: 22px;
+      border: none;
+      background: none;
+      padding: 0;
     }
 
     /* Camera */
     .camera-buttons {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+      gap: 6px;
     }
 
-    /* Responsive */
     @media (max-width: 1100px) {
       body {
         grid-template-columns: 260px 1fr;
@@ -222,9 +287,7 @@
           "header header"
           "left viewport";
       }
-      aside.right {
-        display: none;
-      }
+      aside.right { display: none; }
     }
   </style>
 </head>
@@ -257,21 +320,19 @@
     <section>
       <h2>Render Mode</h2>
       <div class="modes">
-        <div class="mode active">PBR</div>
-        <div class="mode">Wireframe</div>
-        <div class="mode">Normals</div>
-        <div class="mode">UV Checker</div>
-        <div class="mode">Unlit</div>
+        <div class="mode active"><span>🧊</span>PBR</div>
+        <div class="mode"><span>🕸️</span>Wire</div>
+        <div class="mode"><span>🎨</span>Normals</div>
+        <div class="mode"><span>🔲</span>UV</div>
+        <div class="mode"><span>💡</span>Unlit</div>
       </div>
     </section>
   </aside>
 
   <main>
     <div class="viewport-placeholder">
-      3D Viewport Canvas
-      <br />Auto-fit on load · Drag to rotate · Scroll to zoom
+      3D Viewport Canvas<br />Drag to rotate · Scroll to zoom
     </div>
-
     <div class="viewport-overlay">
       <div class="toggle">Grid</div>
       <div class="toggle">Axes</div>
@@ -282,10 +343,15 @@
     <section>
       <h2>Performance</h2>
       <div class="card">
-        <div class="score">82</div>
+        <div class="perf-controls">
+          <button>Good</button>
+          <button>Moderate</button>
+          <button>Poor</button>
+        </div>
+        <div class="score" style="color: var(--good)">82</div>
         <div class="badge" style="color: var(--good)">Good</div>
         <div class="row"><span>File Size</span><span>2.5 MB</span></div>
-        <div class="row"><span>Texture Memory</span><span>8 MB</span></div>
+        <div class="row"><span>Texture</span><span>8 MB</span></div>
         <div class="row"><span>Triangles</span><span>15,000</span></div>
         <div class="row"><span>Tip</span><span>Reduce texture size</span></div>
       </div>
@@ -294,13 +360,16 @@
     <section>
       <h2>Lighting</h2>
       <div class="card">
-        <strong>Main Light</strong>
-        <input type="range" />
-        <input type="color" value="#ffffff" />
-        <br /><br />
-        <strong>Ambient</strong>
-        <input type="range" />
-        <input type="color" value="#ffffff" />
+        <div class="light-row">
+          <label>Main</label>
+          <input type="range" />
+          <input type="color" value="#ffffff" />
+        </div>
+        <div class="light-row">
+          <label>Ambient</label>
+          <input type="range" />
+          <input type="color" value="#ffffff" />
+        </div>
       </div>
     </section>
 
