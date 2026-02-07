@@ -3,73 +3,198 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3D Model Viewer – UX/UI Challenge</title>
+  <title>3D Model Viewer — Professional Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-main: #0e0d12;
-      --bg-panel: #16151c;
-      --bg-panel-alt: #1d1c24;
-      --bg-viewport: #212020;
-      --accent: #6d4cff;
-      --accent-soft: #8b6dff;
-      --text-main: #e7e6ee;
-      --text-muted: #a3a1b2;
-      --good: #3ddc97;
-      --warn: #facc15;
-      --bad: #ef4444;
-      --border: #2a2933;
+      --bg-dark: #0a0514;
+      --bg-panel: #110a1c;
+      --bg-card: #1a1228;
+      --bg-hover: #231834;
+      --accent-primary: #8b5cf6;
+      --accent-bright: #a78bfa;
+      --accent-dark: #6d28d9;
+      --accent-glow: rgba(139, 92, 246, 0.3);
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: rgba(139, 92, 246, 0.15);
+      --border-hover: rgba(139, 92, 246, 0.3);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-glow: 0 0 20px rgba(139, 92, 246, 0.2);
+    }
+
+    [data-theme="light"] {
+      --bg-dark: #faf8ff;
+      --bg-panel: #f5f3ff;
+      --bg-card: #ffffff;
+      --bg-hover: #ede9fe;
+      --accent-primary: #a78bfa;
+      --accent-bright: #c4b5fd;
+      --accent-dark: #8b5cf6;
+      --accent-glow: rgba(167, 139, 250, 0.3);
+      --text-primary: #1f2937;
+      --text-secondary: #4b5563;
+      --text-muted: #6b7280;
+      --success: #059669;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --border: rgba(167, 139, 250, 0.2);
+      --border-hover: rgba(167, 139, 250, 0.4);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-glow: 0 0 20px rgba(167, 139, 250, 0.3);
     }
 
     * {
       box-sizing: border-box;
-      font-family: Inter, system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      background: var(--bg-main);
-      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
       height: 100vh;
+      overflow: hidden;
       display: grid;
-      grid-template-columns: 280px 1fr 300px;
-      grid-template-rows: 48px 1fr;
+      grid-template-columns: 260px 1fr 280px;
+      grid-template-rows: 56px 1fr 32px;
       grid-template-areas:
         "header header header"
-        "left viewport right";
+        "left viewport right"
+        "footer footer footer";
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     /* Header */
     header {
       grid-area: header;
-      background: linear-gradient(90deg, #1a1830, #12101c);
+      background: var(--bg-panel);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 14px;
+      padding: 0 20px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      transition: background-color 0.3s ease;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+      opacity: 0.5;
     }
 
     header h1 {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 600;
-      letter-spacing: 0.3px;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent-bright), var(--text-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    header button {
-      background: var(--accent);
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Outfit', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-hover);
+    }
+
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn {
+      background: var(--accent-primary);
       border: none;
       color: white;
-      padding: 6px 10px;
-      border-radius: 5px;
-      font-size: 12px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Outfit', sans-serif;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn:hover {
+      background: var(--accent-bright);
+      box-shadow: 0 0 16px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-hover);
+      box-shadow: none;
     }
 
     /* Panels */
     aside {
       background: var(--bg-panel);
-      padding: 12px;
+      padding: 12px 10px;
       overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    aside::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    aside::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    aside::-webkit-scrollbar-thumb {
+      background: var(--accent-primary);
+      border-radius: 3px;
     }
 
     aside.left {
@@ -83,56 +208,140 @@
     }
 
     section {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
+    }
+
+    section:last-child {
+      margin-bottom: 0;
     }
 
     section h2 {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       margin-bottom: 8px;
-      color: var(--accent-soft);
+      color: var(--accent-bright);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    section h2::before {
+      content: '';
+      width: 3px;
+      height: 10px;
+      background: var(--accent-primary);
+      border-radius: 2px;
     }
 
     .card {
-      background: var(--bg-panel-alt);
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 10px;
+      transition: border-color 0.2s ease;
     }
 
-    .row {
+    .card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .info-row {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 11px;
       margin-bottom: 5px;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .info-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-row span:first-child {
       color: var(--text-muted);
+    }
+
+    .info-row span:last-child {
+      color: var(--text-primary);
+      font-weight: 500;
     }
 
     /* Upload */
     .upload {
       border: 2px dashed var(--border);
       border-radius: 8px;
-      padding: 14px;
+      padding: 20px 12px;
       text-align: center;
       font-size: 12px;
       cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--bg-card);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .upload:hover {
+      border-color: var(--accent-primary);
+      background: var(--bg-hover);
+    }
+
+    .upload:hover::before {
+      opacity: 1;
+    }
+
+    .upload-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+      opacity: 0.7;
+    }
+
+    .upload-text {
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .upload-formats {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .progress {
-      height: 5px;
-      background: #2a2933;
+      height: 4px;
+      background: rgba(139, 92, 246, 0.1);
       border-radius: 4px;
       overflow: hidden;
-      margin-top: 8px;
+      margin-top: 12px;
+      display: none;
     }
 
-    .progress span {
+    .progress.active {
+      display: block;
+    }
+
+    .progress-bar {
       display: block;
       height: 100%;
-      width: 60%;
-      background: var(--accent);
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-bright));
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px var(--accent-glow);
     }
 
     /* Render Modes */
@@ -143,9 +352,9 @@
     }
 
     .mode {
-      padding: 6px 4px;
+      padding: 8px 4px;
       font-size: 10px;
-      background: var(--bg-panel);
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 6px;
       text-align: center;
@@ -154,25 +363,72 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      color: var(--text-muted);
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+      font-weight: 500;
     }
 
-    .mode span {
-      font-size: 14px;
+    .mode-icon {
+      font-size: 16px;
+      opacity: 0.8;
+    }
+
+    .mode:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
     }
 
     .mode.active {
-      background: var(--accent);
-      border-color: var(--accent);
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
       color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .mode.active .mode-icon {
+      opacity: 1;
     }
 
     /* Sliders */
+    .slider-control {
+      margin-bottom: 10px;
+    }
+
+    .slider-control:last-child {
+      margin-bottom: 0;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .slider-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .slider-value {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     input[type="range"] {
       -webkit-appearance: none;
-      width: 100%;
+      flex: 1;
       height: 4px;
-      background: #2a2933;
+      background: rgba(139, 92, 246, 0.1);
       border-radius: 999px;
       outline: none;
       cursor: pointer;
@@ -180,162 +436,627 @@
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 12px;
-      height: 12px;
-      background: var(--accent);
+      width: 14px;
+      height: 14px;
+      background: var(--accent-primary);
       border-radius: 50%;
-      margin-top: -4px;
-      box-shadow: 0 0 0 3px rgba(109, 76, 255, 0.25);
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    input[type="range"]:hover::-webkit-slider-thumb {
+      background: var(--accent-bright);
+      box-shadow: 0 0 0 6px rgba(139, 92, 246, 0.3);
+    }
+
+    input[type="color"] {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--border);
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    input[type="color"]::-webkit-color-swatch {
+      border: none;
     }
 
     /* Viewport */
     main {
       grid-area: viewport;
       position: relative;
-      background: var(--bg-viewport);
+      background: var(--bg-dark);
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      transition: background-color 0.3s ease;
+    }
+
+    main::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(0deg, var(--border) 0px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, var(--border) 0px, transparent 1px, transparent 40px);
+      pointer-events: none;
+      opacity: 0.5;
     }
 
     .viewport-placeholder {
       color: var(--text-muted);
       font-size: 13px;
       text-align: center;
+      z-index: 1;
+      user-select: none;
+    }
+
+    .placeholder-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.3;
+    }
+
+    .placeholder-text {
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .placeholder-hint {
+      font-size: 11px;
+      color: var(--text-muted);
     }
 
     .viewport-overlay {
       position: absolute;
-      bottom: 12px;
-      left: 12px;
+      bottom: 16px;
+      left: 16px;
       display: flex;
       gap: 8px;
+      z-index: 10;
+    }
+
+    .viewport-controls-top {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+    }
+
+    .camera-control {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      color: var(--text-secondary);
+      position: relative;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .camera-control:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .camera-control.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .camera-control .tooltip {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      box-shadow: var(--shadow-md);
+    }
+
+    .camera-control:hover .tooltip {
+      opacity: 1;
+    }
+
+    .camera-control .tooltip::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-bottom-color: var(--border);
     }
 
     .toggle {
-      background: var(--bg-panel);
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      padding: 4px 8px;
+      padding: 6px 12px;
       border-radius: 6px;
       font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toggle svg {
+      opacity: 0.7;
+    }
+
+    .toggle:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-hover);
+    }
+
+    .toggle.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .toggle.active svg {
+      opacity: 1;
     }
 
     /* Performance */
-    .score {
-      font-size: 28px;
-      font-weight: 700;
+    .perf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .score-display {
       text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .score {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
       margin-bottom: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.3s ease;
     }
 
     .badge {
-      text-align: center;
-      font-size: 11px;
-      margin-bottom: 8px;
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+    }
+
+    .badge.good {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+    }
+
+    .badge.moderate {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+    }
+
+    .badge.poor {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
     }
 
     .perf-controls {
       display: flex;
       gap: 6px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
-    .perf-controls button {
+    .demo-label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+    }
+
+    .demo-label::before {
+      content: '⚠';
+      margin-right: 4px;
+      font-size: 10px;
+    }
+
+    .perf-btn {
       flex: 1;
       font-size: 10px;
-      padding: 4px;
-      background: var(--bg-panel);
+      padding: 6px;
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      color: var(--text-muted);
-      border-radius: 4px;
+      color: var(--text-secondary);
+      border-radius: 5px;
       cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      font-family: 'Outfit', sans-serif;
     }
 
-    /* Lighting – Blender inspired */
-    .light-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 8px;
+    .perf-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-hover);
     }
 
-    .light-row label {
+    .perf-btn.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .perf-tip {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 8px;
+      margin-top: 10px;
+    }
+
+    .perf-tip-label {
+      font-size: 9px;
+      color: var(--accent-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .perf-tip-text {
       font-size: 11px;
-      width: 60px;
-      color: var(--text-muted);
-    }
-
-    .light-row input[type="color"] {
-      width: 22px;
-      height: 22px;
-      border: none;
-      background: none;
-      padding: 0;
+      color: var(--text-secondary);
+      line-height: 1.4;
     }
 
     /* Camera */
-    .camera-buttons {
+    .camera-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 6px;
     }
 
-    @media (max-width: 1100px) {
+    .camera-btn {
+      padding: 10px 8px;
+      font-size: 11px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .camera-icon {
+      font-size: 16px;
+      opacity: 0.7;
+    }
+
+    .camera-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .camera-btn.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: white;
+    }
+
+    .camera-btn.active .camera-icon {
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      grid-area: footer;
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .footer-status {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
       body {
-        grid-template-columns: 260px 1fr;
+        grid-template-columns: 240px 1fr;
         grid-template-areas:
           "header header"
-          "left viewport";
+          "left viewport"
+          "footer footer";
       }
       aside.right { display: none; }
     }
+
+    @media (max-width: 768px) {
+      body {
+        grid-template-columns: 1fr;
+        grid-template-rows: 56px 1fr 32px;
+        grid-template-areas:
+          "header"
+          "viewport"
+          "footer";
+      }
+      aside.left { display: none; }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    section {
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    section:nth-child(1) { animation-delay: 0.05s; }
+    section:nth-child(2) { animation-delay: 0.1s; }
+    section:nth-child(3) { animation-delay: 0.15s; }
+    section:nth-child(4) { animation-delay: 0.2s; }
+    section:nth-child(5) { animation-delay: 0.25s; }
   </style>
 </head>
 <body>
   <header>
-    <h1>3D Model Viewer</h1>
-    <button>Export Screenshot</button>
+    <h1>⬡ 3D Model Viewer</h1>
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="moon-icon" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button class="btn btn-secondary">Reset View</button>
+      <button class="btn">Export Screenshot</button>
+    </div>
   </header>
 
   <aside class="left">
     <section>
       <h2>Model Upload</h2>
-      <div class="upload">
-        Click or Drop Model
-        <div class="progress"><span></span></div>
+      <div class="upload" id="uploadArea">
+        <div class="upload-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <div class="upload-text">Click or Drop Model</div>
+        <div class="upload-formats">.glb .gltf .obj .fbx</div>
+        <div class="progress" id="uploadProgress">
+          <span class="progress-bar"></span>
+        </div>
       </div>
     </section>
 
     <section>
       <h2>Model Info</h2>
       <div class="card">
-        <div class="row"><span>Vertices</span><span>12,430</span></div>
-        <div class="row"><span>Triangles</span><span>15,000</span></div>
-        <div class="row"><span>Meshes</span><span>4</span></div>
-        <div class="row"><span>Materials</span><span>3</span></div>
-        <div class="row"><span>Dimensions</span><span>2.1 × 1.4 × 0.9m</span></div>
+        <div class="info-row"><span>Vertices</span><span>12,430</span></div>
+        <div class="info-row"><span>Triangles</span><span>15,000</span></div>
+        <div class="info-row"><span>Meshes</span><span>4</span></div>
+        <div class="info-row"><span>Materials</span><span>3</span></div>
+        <div class="info-row"><span>Dimensions</span><span>2.1 × 1.4 × 0.9m</span></div>
       </div>
     </section>
 
     <section>
       <h2>Render Mode</h2>
       <div class="modes">
-        <div class="mode active"><span>🧊</span>PBR</div>
-        <div class="mode"><span>🕸️</span>Wire</div>
-        <div class="mode"><span>🎨</span>Normals</div>
-        <div class="mode"><span>🔲</span>UV</div>
-        <div class="mode"><span>💡</span>Unlit</div>
+        <div class="mode active" data-mode="pbr">
+          <div class="mode-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M8 2 L14 5 L14 11 L8 14 L2 11 L2 5 Z"/>
+              <path d="M8 2 L8 8 M8 8 L2 11 M8 8 L14 11"/>
+            </svg>
+          </div>
+          <div>PBR</div>
+        </div>
+        <div class="mode" data-mode="wire">
+          <div class="mode-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="4" cy="4" r="2"/>
+              <circle cx="12" cy="4" r="2"/>
+              <circle cx="4" cy="12" r="2"/>
+              <circle cx="12" cy="12" r="2"/>
+              <line x1="6" y1="4" x2="10" y2="4"/>
+              <line x1="6" y1="12" x2="10" y2="12"/>
+              <line x1="4" y1="6" x2="4" y2="10"/>
+              <line x1="12" y1="6" x2="12" y2="10"/>
+            </svg>
+          </div>
+          <div>Wire</div>
+        </div>
+        <div class="mode" data-mode="normals">
+          <div class="mode-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="8" r="6"/>
+              <line x1="8" y1="8" x2="8" y2="3" stroke-width="2"/>
+              <line x1="8" y1="3" x2="6" y2="5"/>
+              <line x1="8" y1="3" x2="10" y2="5"/>
+            </svg>
+          </div>
+          <div>Normals</div>
+        </div>
+        <div class="mode" data-mode="uv">
+          <div class="mode-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="2" width="5" height="5"/>
+              <rect x="9" y="2" width="5" height="5"/>
+              <rect x="2" y="9" width="5" height="5"/>
+              <rect x="9" y="9" width="5" height="5"/>
+            </svg>
+          </div>
+          <div>UV</div>
+        </div>
+        <div class="mode" data-mode="unlit">
+          <div class="mode-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="8" r="3"/>
+              <line x1="8" y1="1" x2="8" y2="3"/>
+              <line x1="8" y1="13" x2="8" y2="15"/>
+              <line x1="1" y1="8" x2="3" y2="8"/>
+              <line x1="13" y1="8" x2="15" y2="8"/>
+            </svg>
+          </div>
+          <div>Unlit</div>
+        </div>
       </div>
     </section>
   </aside>
 
   <main>
     <div class="viewport-placeholder">
-      3D Viewport Canvas<br />Drag to rotate · Scroll to zoom
+      <div class="placeholder-icon">⬡</div>
+      <div class="placeholder-text">3D Viewport</div>
+      <div class="placeholder-hint">Drag to rotate · Scroll to zoom</div>
+    </div>
+    <div class="viewport-controls-top">
+      <div class="camera-control active" data-camera="front">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="10" height="10" rx="1"/>
+        </svg>
+        <span class="tooltip">Front View (0°, 0°)</span>
+      </div>
+      <div class="camera-control" data-camera="side">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 3 L13 3 L13 13 L3 13 Z M13 3 L10 6 L10 10 L13 13"/>
+        </svg>
+        <span class="tooltip">Side View (90°, 0°)</span>
+      </div>
+      <div class="camera-control" data-camera="top">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="10" height="10" rx="1"/>
+          <circle cx="8" cy="8" r="2"/>
+        </svg>
+        <span class="tooltip">Top View (0°, 90°)</span>
+      </div>
+      <div class="camera-control" data-camera="3d">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 2 L14 6 L14 10 L8 14 L2 10 L2 6 Z M8 2 L8 14 M2 6 L14 10 M14 6 L2 10"/>
+        </svg>
+        <span class="tooltip">3/4 View (Perspective)</span>
+      </div>
     </div>
     <div class="viewport-overlay">
-      <div class="toggle">Grid</div>
-      <div class="toggle">Axes</div>
+      <div class="toggle" id="gridToggle">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="0" y1="4" x2="12" y2="4"/>
+          <line x1="0" y1="8" x2="12" y2="8"/>
+          <line x1="4" y1="0" x2="4" y2="12"/>
+          <line x1="8" y1="0" x2="8" y2="12"/>
+        </svg>
+        Grid
+      </div>
+      <div class="toggle" id="axesToggle">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="6" y1="6" x2="11" y2="6"/>
+          <line x1="6" y1="6" x2="6" y2="1"/>
+          <line x1="6" y1="6" x2="2" y2="10"/>
+        </svg>
+        Axes
+      </div>
     </div>
   </main>
 
@@ -343,45 +1064,217 @@
     <section>
       <h2>Performance</h2>
       <div class="card">
+        <div class="demo-label">These button are for UI/UX demo only</div>
         <div class="perf-controls">
-          <button>Good</button>
-          <button>Moderate</button>
-          <button>Poor</button>
+          <button class="perf-btn" data-perf="good">Good</button>
+          <button class="perf-btn active" data-perf="moderate">Moderate</button>
+          <button class="perf-btn" data-perf="poor">Poor</button>
         </div>
-        <div class="score" style="color: var(--good)">82</div>
-        <div class="badge" style="color: var(--good)">Good</div>
-        <div class="row"><span>File Size</span><span>2.5 MB</span></div>
-        <div class="row"><span>Texture</span><span>8 MB</span></div>
-        <div class="row"><span>Triangles</span><span>15,000</span></div>
-        <div class="row"><span>Tip</span><span>Reduce texture size</span></div>
+        <div class="score-display">
+          <div class="score" id="perfScore" style="color: var(--warning)">67</div>
+          <div class="badge moderate" id="perfBadge">Moderate</div>
+        </div>
+        <div class="info-row"><span>File Size</span><span id="fileSize">2.5 MB</span></div>
+        <div class="info-row"><span>Texture</span><span id="textureMem">8 MB</span></div>
+        <div class="info-row"><span>Triangles</span><span id="triangles">15,000</span></div>
+        <div class="perf-tip">
+          <div class="perf-tip-label">Optimization Tip</div>
+          <div class="perf-tip-text" id="perfTip">Reduce texture resolution to improve performance</div>
+        </div>
       </div>
     </section>
 
     <section>
       <h2>Lighting</h2>
       <div class="card">
-        <div class="light-row">
-          <label>Main</label>
-          <input type="range" />
-          <input type="color" value="#ffffff" />
+        <div class="slider-control">
+          <div class="slider-header">
+            <span class="slider-label">Main Light</span>
+            <span class="slider-value" id="mainValue">75%</span>
+          </div>
+          <div class="slider-row">
+            <input type="range" id="mainIntensity" min="0" max="100" value="75" />
+            <input type="color" id="mainColor" value="#ffffff" />
+          </div>
         </div>
-        <div class="light-row">
-          <label>Ambient</label>
-          <input type="range" />
-          <input type="color" value="#ffffff" />
+        <div class="slider-control">
+          <div class="slider-header">
+            <span class="slider-label">Ambient</span>
+            <span class="slider-value" id="ambientValue">45%</span>
+          </div>
+          <div class="slider-row">
+            <input type="range" id="ambientIntensity" min="0" max="100" value="45" />
+            <input type="color" id="ambientColor" value="#8b5cf6" />
+          </div>
         </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Camera</h2>
-      <div class="camera-buttons">
-        <div class="mode">Front</div>
-        <div class="mode">Side</div>
-        <div class="mode">Top</div>
-        <div class="mode">3/4</div>
       </div>
     </section>
   </aside>
+
+  <footer>
+    <div class="footer-status">
+      <div class="status-item">
+        <span class="status-dot"></span>
+        <span>Ready</span>
+      </div>
+      <div class="status-item">FPS: 60</div>
+      <div class="status-item">Memory: 45.2 MB</div>
+    </div>
+    <div>3D Model Viewer v2.0</div>
+  </footer>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const sunIcon = themeToggle.querySelector('.sun-icon');
+    const moonIcon = themeToggle.querySelector('.moon-icon');
+    const htmlEl = document.documentElement;
+
+    // Check for saved theme preference or default to dark
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    htmlEl.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+
+    function updateThemeIcon(theme) {
+      if (theme === 'dark') {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      } else {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      }
+    }
+
+    // Performance simulation data
+    const perfData = {
+      good: {
+        score: 92,
+        badge: 'Good',
+        badgeClass: 'good',
+        color: 'var(--success)',
+        fileSize: '1.2 MB',
+        texture: '4 MB',
+        triangles: '8,500',
+        tip: 'Model is optimized for web viewing'
+      },
+      moderate: {
+        score: 67,
+        badge: 'Moderate',
+        badgeClass: 'moderate',
+        color: 'var(--warning)',
+        fileSize: '2.5 MB',
+        texture: '8 MB',
+        triangles: '15,000',
+        tip: 'Reduce texture resolution to improve performance'
+      },
+      poor: {
+        score: 38,
+        badge: 'Poor',
+        badgeClass: 'poor',
+        color: 'var(--danger)',
+        fileSize: '5.8 MB',
+        texture: '16 MB',
+        triangles: '45,000',
+        tip: 'Optimize mesh and compress textures for better performance'
+      }
+    };
+
+    // Performance buttons
+    document.querySelectorAll('.perf-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.perf-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const perfType = btn.dataset.perf;
+        const data = perfData[perfType];
+        
+        // Update UI
+        const scoreEl = document.getElementById('perfScore');
+        const badgeEl = document.getElementById('perfBadge');
+        
+        scoreEl.textContent = data.score;
+        scoreEl.style.color = data.color;
+        
+        badgeEl.textContent = data.badge;
+        badgeEl.className = `badge ${data.badgeClass}`;
+        
+        document.getElementById('fileSize').textContent = data.fileSize;
+        document.getElementById('textureMem').textContent = data.texture;
+        document.getElementById('triangles').textContent = data.triangles;
+        document.getElementById('perfTip').textContent = data.tip;
+      });
+    });
+
+    // Render mode switcher
+    document.querySelectorAll('.mode').forEach(mode => {
+      mode.addEventListener('click', () => {
+        document.querySelectorAll('.mode').forEach(m => m.classList.remove('active'));
+        mode.classList.add('active');
+      });
+    });
+
+    // Camera buttons
+    document.querySelectorAll('.camera-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.camera-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Camera controls in viewport
+    document.querySelectorAll('.camera-control').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.camera-control').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Viewport toggles
+    document.getElementById('gridToggle').addEventListener('click', function() {
+      this.classList.toggle('active');
+    });
+
+    document.getElementById('axesToggle').addEventListener('click', function() {
+      this.classList.toggle('active');
+    });
+
+    // Upload simulation
+    document.getElementById('uploadArea').addEventListener('click', () => {
+      const progressEl = document.getElementById('uploadProgress');
+      const barEl = progressEl.querySelector('.progress-bar');
+      
+      progressEl.classList.add('active');
+      let width = 0;
+      
+      const interval = setInterval(() => {
+        width += Math.random() * 20;
+        if (width >= 100) {
+          width = 100;
+          clearInterval(interval);
+          setTimeout(() => {
+            progressEl.classList.remove('active');
+            barEl.style.width = '0%';
+          }, 500);
+        }
+        barEl.style.width = width + '%';
+      }, 100);
+    });
+
+    // Lighting sliders
+    document.getElementById('mainIntensity').addEventListener('input', (e) => {
+      document.getElementById('mainValue').textContent = e.target.value + '%';
+    });
+
+    document.getElementById('ambientIntensity').addEventListener('input', (e) => {
+      document.getElementById('ambientValue').textContent = e.target.value + '%';
+    });
+  </script>
 </body>
 </html>
