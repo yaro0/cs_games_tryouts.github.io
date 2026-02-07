@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Model Viewer – UX/UI Challenge</title>
+  <style>
+    :root {
+      --bg-main: #0f0b1a;
+      --bg-panel: #18122b;
+      --bg-panel-alt: #221a3d;
+      --accent: #6d4cff;
+      --accent-soft: #8b6dff;
+      --text-main: #e6e3f3;
+      --text-muted: #a5a0c2;
+      --good: #3ddc97;
+      --warn: #facc15;
+      --bad: #ef4444;
+      --border: #2f2754;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg-main);
+      color: var(--text-main);
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 300px 1fr 320px;
+      grid-template-rows: 64px 1fr;
+      grid-template-areas:
+        "header header header"
+        "left viewport right";
+    }
+
+    /* Header */
+    header {
+      grid-area: header;
+      background: linear-gradient(90deg, #1b1340, #120c2b);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+    }
+
+    header button {
+      background: var(--accent);
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Panels */
+    aside {
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    aside.right {
+      grid-area: right;
+      border-left: 1px solid var(--border);
+    }
+
+    aside.left {
+      grid-area: left;
+    }
+
+    section {
+      margin-bottom: 20px;
+    }
+
+    section h2 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--accent-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .card {
+      background: var(--bg-panel-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    /* Upload */
+    .upload {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .progress {
+      height: 6px;
+      background: #2a2252;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 60%;
+      background: var(--accent);
+    }
+
+    /* Performance */
+    .score {
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--good);
+    }
+
+    .badge {
+      text-align: center;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    /* Render Modes */
+    .modes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .mode {
+      padding: 8px;
+      font-size: 12px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .mode.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* Sliders */
+    input[type="range"] {
+      width: 100%;
+    }
+
+    /* Viewport */
+    main {
+      grid-area: viewport;
+      position: relative;
+      background: radial-gradient(circle at center, #1c1442, #0f0b1a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .viewport-placeholder {
+      color: var(--text-muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .viewport-overlay {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .toggle {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    /* Camera */
+    .camera-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      body {
+        grid-template-columns: 260px 1fr;
+        grid-template-areas:
+          "header header"
+          "left viewport";
+      }
+      aside.right {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>3D Model Viewer</h1>
+    <button>Export Screenshot</button>
+  </header>
+
+  <aside class="left">
+    <section>
+      <h2>Model Upload</h2>
+      <div class="upload">
+        Click or Drop Model
+        <div class="progress"><span></span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Model Info</h2>
+      <div class="card">
+        <div class="row"><span>Vertices</span><span>12,430</span></div>
+        <div class="row"><span>Triangles</span><span>15,000</span></div>
+        <div class="row"><span>Meshes</span><span>4</span></div>
+        <div class="row"><span>Materials</span><span>3</span></div>
+        <div class="row"><span>Dimensions</span><span>2.1 × 1.4 × 0.9m</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Render Mode</h2>
+      <div class="modes">
+        <div class="mode active">PBR</div>
+        <div class="mode">Wireframe</div>
+        <div class="mode">Normals</div>
+        <div class="mode">UV Checker</div>
+        <div class="mode">Unlit</div>
+      </div>
+    </section>
+  </aside>
+
+  <main>
+    <div class="viewport-placeholder">
+      3D Viewport Canvas
+      <br />Auto-fit on load · Drag to rotate · Scroll to zoom
+    </div>
+
+    <div class="viewport-overlay">
+      <div class="toggle">Grid</div>
+      <div class="toggle">Axes</div>
+    </div>
+  </main>
+
+  <aside class="right">
+    <section>
+      <h2>Performance</h2>
+      <div class="card">
+        <div class="score">82</div>
+        <div class="badge" style="color: var(--good)">Good</div>
+        <div class="row"><span>File Size</span><span>2.5 MB</span></div>
+        <div class="row"><span>Texture Memory</span><span>8 MB</span></div>
+        <div class="row"><span>Triangles</span><span>15,000</span></div>
+        <div class="row"><span>Tip</span><span>Reduce texture size</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Lighting</h2>
+      <div class="card">
+        <strong>Main Light</strong>
+        <input type="range" />
+        <input type="color" value="#ffffff" />
+        <br /><br />
+        <strong>Ambient</strong>
+        <input type="range" />
+        <input type="color" value="#ffffff" />
+      </div>
+    </section>
+
+    <section>
+      <h2>Camera</h2>
+      <div class="camera-buttons">
+        <div class="mode">Front</div>
+        <div class="mode">Side</div>
+        <div class="mode">Top</div>
+        <div class="mode">3/4</div>
+      </div>
+    </section>
+  </aside>
+</body>
+</html>
